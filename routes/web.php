@@ -19,3 +19,15 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('index');
 });
+
+
+Route::group(['prefix' => 'bumps','middleware' => 'shopify.verify'], function(){
+    Route::get('/', function(){return view('bumps.overview');});
+    Route::get('/content', function(){return view('bumps.content');});
+    Route::get('/installation', function(){return view('bumps.installation');});
+    Route::get('/placements', function(){return view('bumps.placements');});
+    Route::get('/product-feeds', function(){return view('bumps.product-feeds');});
+    Route::get('/segments', function(){return view('bumps.segments');});
+    Route::get('/widgets', function(){return view('bumps.widgets');});
+    Route::get('/settings', function(){return view('bumps.settings');});
+});
