@@ -17,7 +17,7 @@ class CreateCategoriesTable extends Migration
 
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('parent_id')->nullable()->constrained('categories');
+            $table->foreignId('user_id')->nullable()->constrained('users');
             $table->string('name');
             $table->string('slug')->unique();
             $table->softDeletes();

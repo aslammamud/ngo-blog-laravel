@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use App\Models\Article;
 use App\Models\Category;
+use App\Models\User;
 
 class ArticleFactory extends Factory
 {
@@ -24,13 +25,14 @@ class ArticleFactory extends Factory
     public function definition()
     {
         return [
-            'category_id' => Category::factory(),
-            'tile' => $this->faker->word,
+            'user_id' => User::inRandomOrder()->first(),
+            'category_id' => Category::inRandomOrder()->first(),
+            'title' => $this->faker->word,
             'slug' => $this->faker->slug,
             'content' => $this->faker->paragraphs(3, true),
             'image' => $this->faker->word,
             'status' => $this->faker->randomElement(["PUBLISHED","DRAFT"]),
-            'date' => $this->faker->date(),
+            'published_at' => $this->faker->date(),
             'featured' => $this->faker->boolean,
         ];
     }

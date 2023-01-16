@@ -5,6 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use App\Models\Category;
+use App\Models\User;
 
 class CategoryFactory extends Factory
 {
@@ -23,7 +24,7 @@ class CategoryFactory extends Factory
     public function definition()
     {
         return [
-            'parent_id' => Category::factory(),
+            'user_id' => User::inRandomOrder()->first(),
             'name' => $this->faker->name,
             'slug' => $this->faker->slug,
         ];

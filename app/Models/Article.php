@@ -17,13 +17,14 @@ class Article extends Model
      * @var array
      */
     protected $fillable = [
+        'user_id',
         'category_id',
-        'tile',
+        'title',
         'slug',
         'content',
         'image',
         'status',
-        'date',
+        'published_at',
         'featured',
     ];
 
@@ -35,7 +36,7 @@ class Article extends Model
     protected $casts = [
         'id' => 'integer',
         'category_id' => 'integer',
-        'date' => 'date',
+        'published_at' => 'datetime',
         'featured' => 'boolean',
     ];
 

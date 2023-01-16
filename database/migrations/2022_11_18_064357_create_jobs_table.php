@@ -17,10 +17,13 @@ class CreateJobsTable extends Migration
 
         Schema::create('jobs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('parent_id')->nullable()->constrained('jobs');
+            $table->foreignId('user_id')->nullable()->constrained('users');
+            $table->foreignId('category_id')->constrained('categories');
             $table->string('title');
             $table->string('slug')->unique();
             $table->longText('content');
+            $table->enum('status', ["PUBLISHED","DRAFT"]);
+            $table->boolean('approved')->default(0);
             $table->timestamp('published_at')->nullable();
             $table->softDeletes();
             $table->timestamps();

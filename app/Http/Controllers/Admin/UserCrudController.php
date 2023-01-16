@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\UserRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Barryvdh\Debugbar\Facades\Debugbar;
+use GuzzleHttp\Psr7\Request;
 
 /**
  * Class UserCrudController
@@ -69,6 +71,13 @@ class UserCrudController extends CrudController
          * - CRUD::field('price')->type('number');
          * - CRUD::addField(['name' => 'price', 'type' => 'number'])); 
          */
+    }
+
+    public function registerNewUser(Request $request)
+    {
+        Debugbar::info($request);
+
+        // return view('admin/register');
     }
 
     /**

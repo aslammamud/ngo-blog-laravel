@@ -17,6 +17,7 @@ class Tag extends Model
      * @var array
      */
     protected $fillable = [
+        'user_id',
         'name',
         'slug',
     ];
@@ -28,6 +29,7 @@ class Tag extends Model
      */
     protected $casts = [
         'id' => 'integer',
+        'user_id' => 'integer',
     ];
 
     public function articles()

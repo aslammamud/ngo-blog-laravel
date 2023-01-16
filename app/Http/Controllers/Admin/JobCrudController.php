@@ -39,10 +39,18 @@ class JobCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        CRUD::column('parent_id');
         CRUD::column('title');
         CRUD::column('slug');
         CRUD::column('content');
+        CRUD::addColumn([
+                'name'  => 'status',
+                'label' => 'Status',
+                'type'  => 'enum',
+                'options' => [
+                    'DRAFT' => 'Is Draft',
+                    'PUBLISHED' => 'Is Published'
+                ]
+            ]);
         CRUD::column('published_at');
 
         /**
@@ -62,10 +70,25 @@ class JobCrudController extends CrudController
     {
         CRUD::setValidation(JobRequest::class);
 
-        CRUD::field('parent_id');
+        CRUD::addField([
+            'name'  => 'user_id',
+            'type'  => 'hidden',
+            'default' => backpack_user()->id,
+            'visibleInTable' => false,
+        ]);
+
         CRUD::field('title');
         CRUD::field('slug');
         CRUD::field('content');
+        CRUD::addField([
+                'name'  => 'status',
+                'label' => 'Status',
+                'type'  => 'enum',
+                'options' => [
+                    'DRAFT' => 'Is Draft',
+                    'PUBLISHED' => 'Is Published'
+                ]
+            ]);
         CRUD::field('published_at');
 
         /**

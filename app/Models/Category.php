@@ -17,7 +17,7 @@ class Category extends Model
      * @var array
      */
     protected $fillable = [
-        'parent_id',
+        'user_id',
         'name',
         'slug',
     ];
@@ -29,7 +29,7 @@ class Category extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'parent_id' => 'integer',
+        'user_id' => 'integer',
     ];
 
     public function articles()

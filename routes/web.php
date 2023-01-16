@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\UserCrudController;
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +20,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('index');
 });
+
+// Route::post('admin/register', [UserCrudController::class, 'registerNewUser'])->name('admin.register');
 
 
 Route::group(['prefix' => 'bumps','middleware' => 'shopify.verify'], function(){

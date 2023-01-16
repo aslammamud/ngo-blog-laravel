@@ -17,10 +17,11 @@ class Job extends Model
      * @var array
      */
     protected $fillable = [
-        'parent_id',
+        'user_id',
         'title',
         'slug',
         'content',
+        'status',
         'published_at',
     ];
 
@@ -31,7 +32,7 @@ class Job extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'parent_id' => 'integer',
+        'user_id' => 'integer',
         'published_at' => 'timestamp',
     ];
 

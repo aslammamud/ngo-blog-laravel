@@ -39,14 +39,38 @@ class ArticleCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        CRUD::column('category_id');
-        CRUD::column('tile');
+        $this->crud->addClause('where', 'user_id', '=', backpack_user()->id);
+
+        CRUD::column('title');
         CRUD::column('slug');
         CRUD::column('content');
-        CRUD::column('image');
-        CRUD::column('status');
-        CRUD::column('date');
-        CRUD::column('featured');
+        
+        $this->crud->addColumn([
+            'label' => "Category", // Table column heading
+            'type' => "select",
+            'name' => 'CategoryID', // the column that contains the ID of that connected entity;
+            'entity' => 'category', // the method that defines the relationship in your Model
+            'attribute' => "name", // foreign key attribute that is shown to user
+            'model' => 'App\Models\Category' // foreign key model
+        ]);
+
+        $this->crud->setColumnDetails('CategoryID', ['attribute' => 'name']);
+        
+        CRUD::addColumn([
+                'name'  => 'status',
+                'label' => 'Status',
+                'type'  => 'enum',
+                'options' => [
+                    'DRAFT' => 'Is Draft',
+                    'PUBLISHED' => 'Is Published'
+                ]
+            ]);
+        CRUD::addColumn([
+            'name'  => 'published_at',
+            'type'  => 'datetime',
+            'default' => date("Y-m-d H:i:s")
+        ]);
+        CRUD::addColumn(['name' => 'featured','type'  => 'boolean']);
 
         /**
          * Columns can be defined using the fluent syntax or array syntax:
@@ -65,14 +89,34 @@ class ArticleCrudController extends CrudController
     {
         CRUD::setValidation(ArticleRequest::class);
 
+        CRUD::addField([
+            'name'  => 'user_id',
+            'type'  => 'hidden',
+            'default' => backpack_user()->id,
+            'visibleInTable' => false,
+        ]);
+
         CRUD::field('category_id');
-        CRUD::field('tile');
+        CRUD::field('title');
         CRUD::field('slug');
         CRUD::field('content');
         CRUD::field('image');
-        CRUD::field('status');
-        CRUD::field('date');
-        CRUD::field('featured');
+        CRUD::addField([
+            'name'  => 'status',
+            'label' => 'Status',
+            'type'  => 'enum',
+            'options' => [
+                'DRAFT' => 'Is Draft',
+                'PUBLISHED' => 'Is Published'
+            ]
+        ]);
+        CRUD::addField([
+            'name'  => 'published_at',
+            'type'  => 'datetime',
+            'default' => date("Y-m-d H:i:s")
+        ]);
+        CRUD::addField(['name' => 'featured', 'type' => 'switch']); 
+
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:
