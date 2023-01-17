@@ -2,22 +2,23 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\ArticleRequest;
+use App\Http\Requests\ApprovalRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Barryvdh\Debugbar\Facades\Debugbar;
 
 /**
  * Class ArticleCrudController
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class ArticleCrudController extends CrudController
+class UnapprovedArticleCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation { show as traitShow; }
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
@@ -27,8 +28,11 @@ class ArticleCrudController extends CrudController
     public function setup()
     {
         CRUD::setModel(\App\Models\Article::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/article');
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/unapproved');
         CRUD::setEntityNameStrings('article', 'articles');
+
+        $this->crud->allowAccess('approve');
+        $this->crud->addButtonFromView('line', 'approve', 'approve', 'beginning');
     }
 
     /**
@@ -39,7 +43,8 @@ class ArticleCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        $this->crud->addClause('where', 'user_id', '=', backpack_user()->id);
+        // $this->crud->addClause('where', 'user_id', '=', backpack_user()->id);
+        $this->crud->addClause('where', 'approved', '=', false);
 
         CRUD::column('title');
         // CRUD::column('slug');
@@ -73,6 +78,11 @@ class ArticleCrudController extends CrudController
         CRUD::addColumn(['name' => 'featured','type'  => 'boolean']);
         CRUD::addColumn(['name' => 'approved','type'  => 'boolean']);
 
+        $this->crud->denyAccess('create');
+        $this->crud->denyAccess('update');
+
+        
+
         /**
          * Columns can be defined using the fluent syntax or array syntax:
          * - CRUD::column('price')->type('number');
@@ -88,7 +98,7 @@ class ArticleCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(ArticleRequest::class);
+        CRUD::setValidation(ApprovalRequest::class);
 
         CRUD::addField([
             'name'  => 'user_id',
@@ -97,32 +107,80 @@ class ArticleCrudController extends CrudController
             'visibleInTable' => false,
         ]);
 
-        CRUD::field('category_id');
-        CRUD::field('title');
-        CRUD::field('slug');
+        CRUD::addField([
+            'name'  => 'category_id',
+            'attributes' => [
+                'readonly'    => 'readonly',
+                'disabled'    => 'disabled',
+              ]
+        ]);
+
+        CRUD::addField([
+            'name'  => 'title',
+            'attributes' => [
+                'readonly'    => 'readonly',
+                'disabled'    => 'disabled',
+              ]
+        ]);
+
+        CRUD::addField([
+            'name'  => 'slug',
+            'attributes' => [
+                'readonly'    => 'readonly',
+                'disabled'    => 'disabled',
+              ]
+        ]);
 
         CRUD::addField([
             'name'  => 'content',
-            'type' => 'summernote'
+            'type' => 'textarea',
+            'attributes' => [
+                'readonly'    => 'readonly',
+                'disabled'    => 'disabled',
+              ]
         ]);
-        
-        CRUD::field('image');
+
+
+        CRUD::addField([
+            'name'  => 'image',
+            'attributes' => [
+                'readonly'    => 'readonly',
+                'disabled'    => 'disabled',
+              ]
+        ]);
+
         CRUD::addField([
             'name'  => 'status',
             'label' => 'Status',
-            'type'  => 'enum',
-            'options' => [
-                'DRAFT' => 'Is Draft',
-                'PUBLISHED' => 'Is Published'
-            ]
+            'attributes' => [
+                'readonly'    => 'readonly',
+                'disabled'    => 'disabled',
+              ]
         ]);
+
         CRUD::addField([
             'name'  => 'published_at',
-            'type'  => 'datetime',
-            'default' => date("Y-m-d H:i:s")
+            'attributes' => [
+                'readonly'    => 'readonly',
+                'disabled'    => 'disabled',
+              ]
         ]);
-        CRUD::addField(['name' => 'featured', 'type' => 'switch']); 
 
+        CRUD::addField([
+            'name' => 'featured',
+            'type' => 'switch',
+            'attributes' => [
+                'readonly'    => 'readonly',
+                'disabled'    => 'disabled',
+              ]
+        ]);
+        CRUD::addField(['name' => 'approved','type'  => 'switch']);
+
+
+        $this->crud->denyAccess('create');
+        $this->crud->denyAccess('update');
+
+        // $this->crud->removeSaveActions(['save_and_new','save_and_preview','save_and_back']);
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:
@@ -140,5 +198,16 @@ class ArticleCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+
+    public function show($id)
+    {
+        // custom logic before
+        $content = $this->traitShow($id);
+        $this->crud->removeButton('update');
+
+        // custom logic after
+        return $content;
     }
 }

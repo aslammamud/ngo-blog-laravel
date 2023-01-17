@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\UserCrudController;
+use App\Models\Article;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +21,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('index');
+});
+
+
+Route::post('/admin/unapproved/{id}/approved', function (Request $request) {
+    // dd($request);
+
+    Article::where('id', '=', $request->id)->update(array('approved' => true));
+    
+    return response()->json(true);
 });
 
 // Route::post('admin/register', [UserCrudController::class, 'registerNewUser'])->name('admin.register');

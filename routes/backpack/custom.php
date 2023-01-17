@@ -18,6 +18,7 @@ Route::group([
     ),
     'namespace'  => 'App\Http\Controllers\Admin',
 ], function () { // custom admin routes
+    Route::crud('unapproved', 'UnapprovedArticleCrudController');
     Route::crud('article', 'ArticleCrudController');
     Route::crud('category', 'CategoryCrudController');
     Route::crud('job', 'JobCrudController');

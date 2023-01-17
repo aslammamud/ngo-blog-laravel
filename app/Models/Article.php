@@ -26,6 +26,7 @@ class Article extends Model
         'status',
         'published_at',
         'featured',
+        'approved',
     ];
 
     /**
@@ -38,6 +39,7 @@ class Article extends Model
         'category_id' => 'integer',
         'published_at' => 'datetime',
         'featured' => 'boolean',
+        'approved' => 'boolean',
     ];
 
     public function tags()
